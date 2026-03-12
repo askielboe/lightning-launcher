@@ -29,9 +29,16 @@ final class SearchPanel: NSPanel {
     override var canBecomeKey: Bool { true }
     override var canBecomeMain: Bool { false }
 
+    override func performKeyEquivalent(with event: NSEvent) -> Bool {
+        // Cmd+, opens settings (menu key equivalents don't work for non-activating panels)
+        if event.modifierFlags.contains(.command) && event.charactersIgnoringModifiers == "," {
+            NSApp.sendAction(Selector(("openSettings")), to: nil, from: nil)
+            return true
+        }
+        return super.performKeyEquivalent(with: event)
+    }
+
     override func keyDown(with event: NSEvent) {
-        // Escape is handled by the text field → PanelController.hide()
-        // This is a fallback for any other key events that reach the panel
         super.keyDown(with: event)
     }
 }
