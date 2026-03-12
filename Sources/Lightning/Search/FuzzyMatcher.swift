@@ -22,9 +22,16 @@ struct FuzzyMatcher {
         guard !query.isEmpty, !target.isEmpty else {
             return MatchResult(score: 0, matchedIndices: [])
         }
+        return match(q: Array(query.lowercased()), t: Array(target.lowercased()))
+    }
 
-        let q = Array(query.lowercased())
-        let t = Array(target.lowercased())
+    /// Scores how well pre-lowercased character arrays match.
+    ///
+    /// Use this overload to avoid repeated lowercasing and array creation.
+    func match(q: [Character], t: [Character]) -> MatchResult {
+        guard !q.isEmpty, !t.isEmpty else {
+            return MatchResult(score: 0, matchedIndices: [])
+        }
 
         // 1. Exact prefix match — highest priority
         if let result = prefixMatch(q: q, t: t) {
@@ -32,7 +39,7 @@ struct FuzzyMatcher {
         }
 
         // 2. Word-boundary match (initials)
-        if let result = wordBoundaryMatch(q: q, t: t, target: target) {
+        if let result = wordBoundaryMatch(q: q, t: t) {
             return result
         }
 
@@ -67,7 +74,7 @@ struct FuzzyMatcher {
         return MatchResult(score: 0.9 + lengthBonus, matchedIndices: indices)
     }
 
-    private func wordBoundaryMatch(q: [Character], t: [Character], target: String) -> MatchResult? {
+    private func wordBoundaryMatch(q: [Character], t: [Character]) -> MatchResult? {
         // Find word boundary positions in target
         var boundaryIndices: [Int] = [0] // First character is always a boundary
         for i in 1..<t.count {

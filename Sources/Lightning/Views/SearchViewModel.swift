@@ -26,7 +26,6 @@ final class SearchViewModel: ObservableObject {
 
     init() {
         $query
-            .debounce(for: .milliseconds(10), scheduler: RunLoop.main)
             .removeDuplicates()
             .sink { [weak self] query in
                 self?.performSearch(query)

@@ -23,29 +23,39 @@ struct SearchEngine {
     func search(query: String, in entries: [AppEntry]) -> [AppEntry] {
         guard !query.isEmpty else { return [] }
 
+        // Convert query to lowercased character array once
+        let q = Array(query.lowercased())
+
+        // Snapshot ranking data once before the loop
+        let frecencySnapshot = scoreCalculator?.frecencyTracker.snapshot()
+        let adaptiveSnapshot = scoreCalculator?.adaptiveLearning.snapshot()
+        let prefixes = scoreCalculator?.adaptiveLearning.extractPrefixes(from: query) ?? []
+
         var scored: [(entry: AppEntry, score: Double)] = []
 
         for entry in entries {
-            // Match against the full app name
-            let nameResult = fuzzyMatcher.match(query: query, target: entry.name)
+            // Match against the pre-computed lowercased name
+            let nameResult = fuzzyMatcher.match(q: q, t: entry.searchName)
             var bestScore = nameResult.score
 
-            // Also try matching against individual keywords
-            for keyword in entry.keywords.dropFirst() {
-                let keywordResult = fuzzyMatcher.match(query: query, target: keyword)
-                // Keyword matches are slightly discounted
+            // Also try matching against pre-computed keyword arrays
+            for keyword in entry.searchKeywords {
+                let keywordResult = fuzzyMatcher.match(q: q, t: keyword)
                 let adjustedScore = keywordResult.score * 0.85
                 bestScore = max(bestScore, adjustedScore)
             }
 
             if bestScore > 0 {
-                // Apply frecency and adaptive boosting if available
                 let finalScore: Double
-                if let calc = scoreCalculator {
+                if let calc = scoreCalculator,
+                   let fSnap = frecencySnapshot,
+                   let aSnap = adaptiveSnapshot {
                     finalScore = calc.finalScore(
                         matchScore: bestScore,
                         bundleId: entry.id,
-                        query: query
+                        prefixes: prefixes,
+                        frecencySnapshot: fSnap,
+                        adaptiveSnapshot: aSnap
                     )
                 } else {
                     finalScore = bestScore

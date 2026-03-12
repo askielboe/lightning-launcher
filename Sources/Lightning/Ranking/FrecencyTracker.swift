@@ -55,6 +55,25 @@ final class FrecencyTracker {
         return min(2.0, max(0.5, 1.0 + decayed * 0.2))
     }
 
+    /// Returns a snapshot of all records, locking once.
+    ///
+    /// Use this to avoid per-entry lock acquisition during search scoring.
+    func snapshot() -> [String: Record] {
+        lock.lock()
+        defer { lock.unlock() }
+        return records
+    }
+
+    /// Returns a frecency multiplier using a pre-fetched snapshot (lock-free).
+    func multiplier(for bundleId: String, in snapshot: [String: Record]) -> Double {
+        guard let record = snapshot[bundleId] else { return 1.0 }
+
+        let dt = Date().timeIntervalSince(record.lastAccess)
+        let decayed = record.score * exp(-lambda * dt)
+
+        return min(2.0, max(0.5, 1.0 + decayed * 0.2))
+    }
+
     /// Loads records from decoded data.
     func load(_ data: [String: Record]) {
         lock.lock()

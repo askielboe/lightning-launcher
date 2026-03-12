@@ -19,4 +19,19 @@ struct ScoreCalculator {
         let adaptiveBoost = adaptiveLearning.boost(for: bundleId, query: query)
         return matchScore * frecencyMultiplier + adaptiveBoost
     }
+
+    /// Calculates the final score using pre-fetched snapshots and prefixes (lock-free).
+    ///
+    /// Call this in the search loop after snapshotting ranking data once.
+    func finalScore(
+        matchScore: Double,
+        bundleId: String,
+        prefixes: [String],
+        frecencySnapshot: [String: FrecencyTracker.Record],
+        adaptiveSnapshot: [String: [String: Int]]
+    ) -> Double {
+        let frecencyMultiplier = frecencyTracker.multiplier(for: bundleId, in: frecencySnapshot)
+        let adaptiveBoost = adaptiveLearning.boost(for: bundleId, prefixes: prefixes, in: adaptiveSnapshot)
+        return matchScore * frecencyMultiplier + adaptiveBoost
+    }
 }

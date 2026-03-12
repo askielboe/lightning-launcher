@@ -79,12 +79,16 @@ struct AppScanner {
             ?? appURL.deletingPathExtension().lastPathComponent
 
         let keywords = tokenize(name)
+        let searchName = Array(name.lowercased())
+        let searchKeywords = keywords.dropFirst().map { Array($0) }
 
         return AppEntry(
             id: bundleId,
             name: name,
             path: appURL,
-            keywords: keywords
+            keywords: keywords,
+            searchName: searchName,
+            searchKeywords: searchKeywords
         )
     }
 

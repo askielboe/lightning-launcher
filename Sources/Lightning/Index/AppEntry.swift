@@ -20,6 +20,12 @@ struct AppEntry: Identifiable {
     /// Tokenized search keywords derived from the app name.
     let keywords: [String]
 
+    /// Pre-computed lowercased character array of the app name (for fuzzy matching).
+    let searchName: [Character]
+
+    /// Pre-computed lowercased character arrays of keywords (for fuzzy matching).
+    let searchKeywords: [[Character]]
+
     /// Frecency score for ranking (updated on launch).
     var frecencyScore: Double = 0.0
 
