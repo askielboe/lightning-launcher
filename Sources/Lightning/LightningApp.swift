@@ -16,7 +16,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let adaptiveLearning = AdaptiveLearning()
     private var persistenceManager: PersistenceManager!
     private var monitorCoordinator: MonitorCoordinator!
-    private var statusItem: NSStatusItem!
+    private var statusItem: NSStatusItem?
     private var settingsWindow: NSWindow?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -42,7 +42,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         globalHotKey = GlobalHotKeyManager(panelController: panelController)
 
         // Set up status bar item
-        setupStatusItem()
+        updateStatusItem()
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(menuBarIconPreferenceChanged),
+            name: UserPreferences.menuBarIconDidChangeNotification,
+            object: nil
+        )
 
         // Start filesystem monitoring
         monitorCoordinator = MonitorCoordinator()
@@ -76,20 +83,33 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     // MARK: - Status Bar
 
-    private func setupStatusItem() {
-        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        if let button = statusItem.button {
-            button.image = NSImage(systemSymbolName: "bolt.fill", accessibilityDescription: "Lightning")
+    @objc private func menuBarIconPreferenceChanged() {
+        updateStatusItem()
+    }
+
+    private func updateStatusItem() {
+        if UserPreferences.shared.showMenuBarIcon {
+            if statusItem == nil {
+                statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+                if let button = statusItem?.button {
+                    button.image = NSImage(systemSymbolName: "bolt.fill", accessibilityDescription: "Lightning")
+                }
+
+                let menu = NSMenu()
+                menu.addItem(NSMenuItem(title: "Open Lightning", action: #selector(openLightning), keyEquivalent: ""))
+                menu.addItem(.separator())
+                menu.addItem(NSMenuItem(title: "Settings...", action: #selector(openSettings), keyEquivalent: ","))
+                menu.addItem(.separator())
+                menu.addItem(NSMenuItem(title: "Quit Lightning", action: #selector(quitApp), keyEquivalent: "q"))
+
+                statusItem?.menu = menu
+            }
+        } else {
+            if let item = statusItem {
+                NSStatusBar.system.removeStatusItem(item)
+                statusItem = nil
+            }
         }
-
-        let menu = NSMenu()
-        menu.addItem(NSMenuItem(title: "Open Lightning", action: #selector(openLightning), keyEquivalent: ""))
-        menu.addItem(.separator())
-        menu.addItem(NSMenuItem(title: "Settings...", action: #selector(openSettings), keyEquivalent: ","))
-        menu.addItem(.separator())
-        menu.addItem(NSMenuItem(title: "Quit Lightning", action: #selector(quitApp), keyEquivalent: "q"))
-
-        statusItem.menu = menu
     }
 
     @objc private func openLightning() {

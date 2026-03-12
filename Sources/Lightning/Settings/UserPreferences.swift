@@ -18,6 +18,7 @@ final class UserPreferences {
         static let hotKeyModifiers = "hotKeyModifiers"
         static let showSearchIcon = "showSearchIcon"
         static let removedDefaultPaths = "removedDefaultPaths"
+        static let showMenuBarIcon = "showMenuBarIcon"
     }
 
     /// Maximum number of search results to display (4-12).
@@ -43,6 +44,15 @@ final class UserPreferences {
         get { defaults.stringArray(forKey: Keys.removedDefaultPaths) ?? [] }
         set { defaults.set(newValue, forKey: Keys.removedDefaultPaths) }
     }
+
+    /// Whether to show the menu bar icon.
+    var showMenuBarIcon: Bool {
+        get { defaults.object(forKey: Keys.showMenuBarIcon) == nil ? true : defaults.bool(forKey: Keys.showMenuBarIcon) }
+        set { defaults.set(newValue, forKey: Keys.showMenuBarIcon) }
+    }
+
+    /// Posted when the menu bar icon visibility changes.
+    static let menuBarIconDidChangeNotification = Notification.Name("LightningMenuBarIconDidChange")
 
     /// Whether to show the lightning bolt icon in the search field.
     var showSearchIcon: Bool {

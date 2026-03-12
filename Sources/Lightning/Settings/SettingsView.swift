@@ -6,6 +6,7 @@ struct SettingsView: View {
     @State private var maxResults: Double
     @State private var launchAtLogin: Bool
     @State private var showSearchIcon: Bool
+    @State private var showMenuBarIcon: Bool
     @State private var additionalPaths: [String]
     @State private var removedDefaultPaths: Set<String>
     @State private var showPathPicker = false
@@ -15,6 +16,7 @@ struct SettingsView: View {
         _maxResults = State(initialValue: Double(prefs.maxResults))
         _launchAtLogin = State(initialValue: prefs.launchAtLogin)
         _showSearchIcon = State(initialValue: prefs.showSearchIcon)
+        _showMenuBarIcon = State(initialValue: prefs.showMenuBarIcon)
         _additionalPaths = State(initialValue: prefs.additionalSearchPaths)
         _removedDefaultPaths = State(initialValue: Set(prefs.removedDefaultPaths))
     }
@@ -34,6 +36,15 @@ struct SettingsView: View {
                     Toggle("Show lightning icon in search field", isOn: $showSearchIcon)
                         .onChange(of: showSearchIcon) { newValue in
                             UserPreferences.shared.showSearchIcon = newValue
+                        }
+
+                    Toggle("Show menu bar icon", isOn: $showMenuBarIcon)
+                        .onChange(of: showMenuBarIcon) { newValue in
+                            UserPreferences.shared.showMenuBarIcon = newValue
+                            NotificationCenter.default.post(
+                                name: UserPreferences.menuBarIconDidChangeNotification,
+                                object: nil
+                            )
                         }
 
                     HStack {
