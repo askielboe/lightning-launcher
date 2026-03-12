@@ -30,16 +30,24 @@ struct SearchView: View {
     }
 
     private var searchField: some View {
-        KeyboardTextField(
-            text: $viewModel.query,
-            placeholder: "Search apps...",
-            onArrowUp: { viewModel.moveUp() },
-            onArrowDown: { viewModel.moveDown() },
-            onReturn: { viewModel.launchSelected() },
-            onEscape: { viewModel.dismiss() }
-        )
-        .padding(.horizontal, 16)
-        .padding(.vertical, 14)
+        HStack(spacing: 0) {
+            if UserPreferences.shared.showSearchIcon {
+                Image(systemName: "bolt.fill")
+                    .font(.system(size: 20, weight: .light))
+                    .foregroundColor(.secondary.opacity(0.4))
+                    .padding(.leading, 16)
+            }
+
+            KeyboardTextField(
+                text: $viewModel.query,
+                onArrowUp: { viewModel.moveUp() },
+                onArrowDown: { viewModel.moveDown() },
+                onReturn: { viewModel.launchSelected() },
+                onEscape: { viewModel.dismiss() }
+            )
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+        }
         .frame(height: PanelController.searchFieldHeight)
     }
 }
@@ -53,7 +61,6 @@ struct SearchView: View {
 /// during editing, so `keyDown` on the NSTextField itself never fires.
 struct KeyboardTextField: NSViewRepresentable {
     @Binding var text: String
-    var placeholder: String
     var onArrowUp: () -> Void
     var onArrowDown: () -> Void
     var onReturn: () -> Void
@@ -62,7 +69,6 @@ struct KeyboardTextField: NSViewRepresentable {
     func makeNSView(context: Context) -> NSTextField {
         let field = NSTextField()
         field.delegate = context.coordinator
-        field.placeholderString = placeholder
         field.font = .systemFont(ofSize: 22, weight: .light)
         field.isBezeled = false
         field.drawsBackground = false

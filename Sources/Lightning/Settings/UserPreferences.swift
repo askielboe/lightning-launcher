@@ -16,6 +16,8 @@ final class UserPreferences {
         static let additionalSearchPaths = "additionalSearchPaths"
         static let hotKeyCode = "hotKeyCode"
         static let hotKeyModifiers = "hotKeyModifiers"
+        static let showSearchIcon = "showSearchIcon"
+        static let removedDefaultPaths = "removedDefaultPaths"
     }
 
     /// Maximum number of search results to display (4-12).
@@ -34,6 +36,18 @@ final class UserPreferences {
     var additionalSearchPaths: [String] {
         get { defaults.stringArray(forKey: Keys.additionalSearchPaths) ?? [] }
         set { defaults.set(newValue, forKey: Keys.additionalSearchPaths) }
+    }
+
+    /// Default search paths that have been removed by the user.
+    var removedDefaultPaths: [String] {
+        get { defaults.stringArray(forKey: Keys.removedDefaultPaths) ?? [] }
+        set { defaults.set(newValue, forKey: Keys.removedDefaultPaths) }
+    }
+
+    /// Whether to show the lightning bolt icon in the search field.
+    var showSearchIcon: Bool {
+        get { defaults.object(forKey: Keys.showSearchIcon) == nil ? true : defaults.bool(forKey: Keys.showSearchIcon) }
+        set { defaults.set(newValue, forKey: Keys.showSearchIcon) }
     }
 
     /// The key code for the global hotkey. Default is 49 (Space).
