@@ -46,11 +46,11 @@ struct SearchEngine {
             }
 
             if bestScore > 0 {
-                let finalScore: Double
-                if let calc = scoreCalculator,
-                   let fSnap = frecencySnapshot,
-                   let aSnap = adaptiveSnapshot {
-                    finalScore = calc.finalScore(
+                let finalScore: Double = if let calc = scoreCalculator,
+                                            let fSnap = frecencySnapshot,
+                                            let aSnap = adaptiveSnapshot
+                {
+                    calc.finalScore(
                         matchScore: bestScore,
                         bundleId: entry.id,
                         prefixes: prefixes,
@@ -58,7 +58,7 @@ struct SearchEngine {
                         adaptiveSnapshot: aSnap
                     )
                 } else {
-                    finalScore = bestScore
+                    bestScore
                 }
                 scored.append((entry, finalScore))
             }

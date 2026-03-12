@@ -1,5 +1,5 @@
-@testable import Lightning
 import Foundation
+@testable import Lightning
 
 /// Creates a minimal `AppEntry` for testing without needing real `.app` bundles.
 func makeAppEntry(

@@ -97,7 +97,7 @@ final class AdaptiveLearning {
     func extractPrefixes(from query: String) -> [String] {
         let lower = query.lowercased()
         var prefixes: [String] = []
-        for length in 2...maxPrefixLength where lower.count >= length {
+        for length in 2 ... maxPrefixLength where lower.count >= length {
             prefixes.append(String(lower.prefix(length)))
         }
         return prefixes

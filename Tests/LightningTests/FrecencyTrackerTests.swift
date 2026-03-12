@@ -1,7 +1,7 @@
-import Testing
 @testable import Lightning
+import Testing
 
-@Suite struct FrecencyTrackerTests {
+struct FrecencyTrackerTests {
     @Test func initialMultiplierIsNeutral() {
         let tracker = FrecencyTracker()
         let multiplier = tracker.multiplier(for: "com.test.app")
@@ -17,7 +17,7 @@ import Testing
 
     @Test func multipleLaunchesIncreaseMultiplier() {
         let tracker = FrecencyTracker()
-        for _ in 0..<5 {
+        for _ in 0 ..< 5 {
             tracker.recordLaunch(bundleId: "com.test.app")
         }
         let multiplier = tracker.multiplier(for: "com.test.app")
@@ -26,7 +26,7 @@ import Testing
 
     @Test func multiplierCapsAt2() {
         let tracker = FrecencyTracker()
-        for _ in 0..<100 {
+        for _ in 0 ..< 100 {
             tracker.recordLaunch(bundleId: "com.test.app")
         }
         let multiplier = tracker.multiplier(for: "com.test.app")

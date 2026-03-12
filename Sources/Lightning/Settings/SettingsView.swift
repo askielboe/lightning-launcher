@@ -1,5 +1,5 @@
-import SwiftUI
 import ServiceManagement
+import SwiftUI
 
 /// Settings window UI for Lightning.
 struct SettingsView: View {
@@ -49,7 +49,7 @@ struct SettingsView: View {
 
                     HStack {
                         Text("Max results")
-                        Slider(value: $maxResults, in: 4...12, step: 1)
+                        Slider(value: $maxResults, in: 4 ... 12, step: 1)
                         Text("\(Int(maxResults))")
                             .monospacedDigit()
                             .frame(width: 20)
@@ -96,7 +96,7 @@ struct SettingsView: View {
                             isPresented: $showPathPicker,
                             allowedContentTypes: [.folder]
                         ) { result in
-                            if case .success(let url) = result {
+                            if case let .success(url) = result {
                                 let path = url.path
                                 if !additionalPaths.contains(path) {
                                     additionalPaths.append(path)

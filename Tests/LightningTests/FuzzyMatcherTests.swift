@@ -1,7 +1,7 @@
-import Testing
 @testable import Lightning
+import Testing
 
-@Suite struct FuzzyMatcherTests {
+struct FuzzyMatcherTests {
     let matcher = FuzzyMatcher()
 
     @Test func exactPrefixMatch() {

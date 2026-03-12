@@ -31,7 +31,7 @@ final class WorkspaceMonitor {
         NSWorkspace.shared.notificationCenter.removeObserver(self)
     }
 
-    @objc private func handleAppEvent(_ notification: Notification) {
+    @objc private func handleAppEvent(_: Notification) {
         onAppEvent?()
     }
 

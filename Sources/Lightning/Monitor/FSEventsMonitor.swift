@@ -1,5 +1,5 @@
-import Foundation
 import CoreServices
+import Foundation
 
 /// Monitors deep directory hierarchies using CoreServices FSEvents.
 ///
@@ -24,7 +24,7 @@ final class FSEventsMonitor {
             guard let info else { return }
             let monitor = Unmanaged<FSEventsMonitor>.fromOpaque(info).takeUnretainedValue()
             let paths = unsafeBitCast(eventPaths, to: NSArray.self)
-            for i in 0..<numEvents {
+            for i in 0 ..< numEvents {
                 if let path = paths[i] as? String {
                     monitor.onChange?(path)
                 }

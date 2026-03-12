@@ -16,7 +16,9 @@ final class FrecencyTracker {
     private let halfLife: TimeInterval = 7 * 24 * 3600
 
     /// Decay constant: λ = ln(2) / halfLife
-    private var lambda: Double { log(2.0) / halfLife }
+    private var lambda: Double {
+        log(2.0) / halfLife
+    }
 
     /// Per-bundle-ID frecency records.
     private(set) var records: [String: Record] = [:]

@@ -1,5 +1,5 @@
-import HotKey
 import AppKit
+import HotKey
 
 /// Manages the global hotkey that toggles the search panel.
 ///

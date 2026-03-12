@@ -1,8 +1,7 @@
-import Testing
 @testable import Lightning
+import Testing
 
-@Suite struct ScoreCalculatorTests {
-
+struct ScoreCalculatorTests {
     // MARK: - Base score
 
     @Test func baseScoreWithNoRankingData() {
@@ -23,7 +22,7 @@ import Testing
         let calc = ScoreCalculator(frecencyTracker: frecency, adaptiveLearning: adaptive)
 
         // Record several launches to build up frecency
-        for _ in 0..<5 {
+        for _ in 0 ..< 5 {
             frecency.recordLaunch(bundleId: "com.test.app")
         }
 
@@ -40,7 +39,7 @@ import Testing
         let calc = ScoreCalculator(frecencyTracker: frecency, adaptiveLearning: adaptive)
 
         // Record selections for a query to build adaptive boost
-        for _ in 0..<5 {
+        for _ in 0 ..< 5 {
             adaptive.recordSelection(bundleId: "com.test.app", query: "test")
         }
 
@@ -56,7 +55,7 @@ import Testing
         let adaptive = AdaptiveLearning()
         let calc = ScoreCalculator(frecencyTracker: frecency, adaptiveLearning: adaptive)
 
-        for _ in 0..<5 {
+        for _ in 0 ..< 5 {
             frecency.recordLaunch(bundleId: "com.test.app")
             adaptive.recordSelection(bundleId: "com.test.app", query: "test")
         }
@@ -65,13 +64,17 @@ import Testing
         // Both effects active: score should exceed either alone
         let frecencyOnly: Double = {
             let f = FrecencyTracker()
-            for _ in 0..<5 { f.recordLaunch(bundleId: "com.test.app") }
+            for _ in 0 ..< 5 {
+                f.recordLaunch(bundleId: "com.test.app")
+            }
             let c = ScoreCalculator(frecencyTracker: f, adaptiveLearning: AdaptiveLearning())
             return c.finalScore(matchScore: 0.8, bundleId: "com.test.app", query: "test")
         }()
         let adaptiveOnly: Double = {
             let a = AdaptiveLearning()
-            for _ in 0..<5 { a.recordSelection(bundleId: "com.test.app", query: "test") }
+            for _ in 0 ..< 5 {
+                a.recordSelection(bundleId: "com.test.app", query: "test")
+            }
             let c = ScoreCalculator(frecencyTracker: FrecencyTracker(), adaptiveLearning: a)
             return c.finalScore(matchScore: 0.8, bundleId: "com.test.app", query: "test")
         }()
@@ -87,7 +90,7 @@ import Testing
         let adaptive = AdaptiveLearning()
         let calc = ScoreCalculator(frecencyTracker: frecency, adaptiveLearning: adaptive)
 
-        for _ in 0..<3 {
+        for _ in 0 ..< 3 {
             frecency.recordLaunch(bundleId: "com.test.app")
             adaptive.recordSelection(bundleId: "com.test.app", query: "test")
         }

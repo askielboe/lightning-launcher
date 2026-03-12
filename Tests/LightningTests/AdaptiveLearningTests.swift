@@ -1,7 +1,7 @@
-import Testing
 @testable import Lightning
+import Testing
 
-@Suite struct AdaptiveLearningTests {
+struct AdaptiveLearningTests {
     @Test func noDataReturnsZeroBoost() {
         let learner = AdaptiveLearning()
         let boost = learner.boost(for: "com.google.Chrome", query: "ch")
@@ -18,7 +18,7 @@ import Testing
     @Test func frequentSelectionGivesHigherBoost() {
         let learner = AdaptiveLearning()
         // Select Chrome 9 times for "ch"
-        for _ in 0..<9 {
+        for _ in 0 ..< 9 {
             learner.recordSelection(bundleId: "com.google.Chrome", query: "ch")
         }
         // Select Chess once for "ch"

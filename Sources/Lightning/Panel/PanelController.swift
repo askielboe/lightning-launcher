@@ -71,13 +71,13 @@ final class PanelController {
 
     /// Hides the panel and clears the search state.
     func hide() {
-        NSAnimationContext.runAnimationGroup({ ctx in
+        NSAnimationContext.runAnimationGroup { ctx in
             ctx.duration = 0.08
             panel.animator().alphaValue = 0
-        }, completionHandler: { [weak self] in
+        } completionHandler: { [weak self] in
             self?.panel.orderOut(nil)
             self?.panel.alphaValue = 1
-        })
+        }
         searchViewModel.deactivate()
     }
 
@@ -107,9 +107,9 @@ final class PanelController {
         eventMonitor = NSEvent.addLocalMonitorForEvents(
             matching: [.leftMouseDown, .rightMouseDown]
         ) { [weak self] event in
-            guard let self, self.panel.isVisible else { return event }
-            if event.window != self.panel {
-                self.hide()
+            guard let self, panel.isVisible else { return event }
+            if event.window != panel {
+                hide()
             }
             return event
         }
@@ -117,8 +117,8 @@ final class PanelController {
         globalEventMonitor = NSEvent.addGlobalMonitorForEvents(
             matching: [.leftMouseDown, .rightMouseDown]
         ) { [weak self] _ in
-            guard let self, self.panel.isVisible else { return }
-            self.hide()
+            guard let self, panel.isVisible else { return }
+            hide()
         }
 
         // Hide when the panel loses key status (e.g. Cmd+Tab, Mission Control)
@@ -127,8 +127,8 @@ final class PanelController {
             object: panel,
             queue: .main
         ) { [weak self] _ in
-            guard let self, self.panel.isVisible else { return }
-            self.hide()
+            guard let self, panel.isVisible else { return }
+            hide()
         }
     }
 

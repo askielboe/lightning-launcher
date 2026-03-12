@@ -3,3 +3,7 @@ excluded:
 
 identifier_name:
   min_length: 1
+
+disabled_rules:
+  - opening_brace
+  - trailing_comma

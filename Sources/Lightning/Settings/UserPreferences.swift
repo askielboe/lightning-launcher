@@ -1,5 +1,5 @@
-import Foundation
 import AppKit
+import Foundation
 
 /// User-configurable preferences backed by UserDefaults.
 final class UserPreferences {

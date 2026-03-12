@@ -111,7 +111,7 @@ struct KeyboardTextField: NSViewRepresentable {
         /// This is the correct place to handle Escape, arrow keys, and Return
         /// for an NSTextField, since the field editor (NSTextView) is the actual
         /// first responder during editing.
-        func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
+        func control(_: NSControl, textView _: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
             switch commandSelector {
             case #selector(NSResponder.cancelOperation(_:)):
                 // Escape

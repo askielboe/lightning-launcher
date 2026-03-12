@@ -26,16 +26,20 @@ final class SearchPanel: NSPanel {
         collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
     }
 
-    override var canBecomeKey: Bool { true }
-    override var canBecomeMain: Bool { false }
+    override var canBecomeKey: Bool {
+        true
+    }
+
+    override var canBecomeMain: Bool {
+        false
+    }
 
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
         // Cmd+, opens settings (menu key equivalents don't work for non-activating panels)
-        if event.modifierFlags.contains(.command) && event.charactersIgnoringModifiers == "," {
+        if event.modifierFlags.contains(.command), event.charactersIgnoringModifiers == "," {
             NSApp.sendAction(Selector(("openSettings")), to: NSApp.delegate, from: nil)
             return true
         }
         return super.performKeyEquivalent(with: event)
     }
-
 }

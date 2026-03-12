@@ -1,9 +1,8 @@
 import Foundation
-import Testing
 @testable import Lightning
+import Testing
 
-@Suite struct AppIndexTests {
-
+struct AppIndexTests {
     // MARK: - Empty state
 
     @Test func emptyIndexReturnsNoEntries() {
@@ -41,7 +40,7 @@ import Testing
 
     // MARK: - Merge behavior
 
-    @Test func updatePreservesUsageStats() {
+    @Test func updatePreservesUsageStats() throws {
         let index = AppIndex()
 
         // Initial scan
@@ -57,7 +56,7 @@ import Testing
 
         let result = index.entry(forBundleId: "com.apple.Safari")
         #expect(result != nil)
-        #expect(abs(result!.frecencyScore - 5.0) < 0.001)
+        #expect(try abs(#require(result?.frecencyScore) - 5.0) < 0.001)
         #expect(result?.launchCount == 3)
         #expect(result?.lastLaunched == Date(timeIntervalSince1970: 1000))
     }

@@ -1,8 +1,7 @@
-import Testing
 @testable import Lightning
+import Testing
 
-@Suite struct SearchEngineTests {
-
+struct SearchEngineTests {
     // MARK: - Fixtures
 
     private let safari = makeAppEntry(id: "com.apple.Safari", name: "Safari", keywords: ["browser", "web"])
@@ -12,7 +11,9 @@ import Testing
     private let slack = makeAppEntry(id: "com.tinyspeck.slackmacgap", name: "Slack", keywords: ["chat", "messaging"])
     private let spotify = makeAppEntry(id: "com.spotify.client", name: "Spotify", keywords: ["music", "player"])
 
-    private var allApps: [AppEntry] { [safari, settings, slack, spotify] }
+    private var allApps: [AppEntry] {
+        [safari, settings, slack, spotify]
+    }
 
     // MARK: - Empty query
 
@@ -86,7 +87,7 @@ import Testing
         let adaptive = AdaptiveLearning()
 
         // Boost Slack heavily for query "s"
-        for _ in 0..<10 {
+        for _ in 0 ..< 10 {
             frecency.recordLaunch(bundleId: "com.tinyspeck.slackmacgap")
             adaptive.recordSelection(bundleId: "com.tinyspeck.slackmacgap", query: "s")
         }

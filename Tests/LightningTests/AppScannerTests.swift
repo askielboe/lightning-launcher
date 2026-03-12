@@ -1,7 +1,7 @@
-import Testing
 @testable import Lightning
+import Testing
 
-@Suite struct AppScannerTests {
+struct AppScannerTests {
     let scanner = AppScanner()
 
     @Test func tokenizeSimpleName() {

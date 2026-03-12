@@ -68,7 +68,7 @@ struct FuzzyMatcher {
         for i in q.indices {
             guard q[i] == t[i] else { return nil }
         }
-        let indices = Array(0..<q.count)
+        let indices = Array(0 ..< q.count)
         // Bonus for shorter targets (exact or near-exact match)
         let lengthBonus = Double(q.count) / Double(t.count) * 0.1
         return MatchResult(score: 0.9 + lengthBonus, matchedIndices: indices)
@@ -76,8 +76,8 @@ struct FuzzyMatcher {
 
     private func wordBoundaryMatch(q: [Character], t: [Character]) -> MatchResult? {
         // Find word boundary positions in target
-        var boundaryIndices: [Int] = [0] // First character is always a boundary
-        for i in 1..<t.count where isWordBoundary(at: i, in: t) {
+        var boundaryIndices = [0] // First character is always a boundary
+        for i in 1 ..< t.count where isWordBoundary(at: i, in: t) {
             boundaryIndices.append(i)
         }
 
@@ -86,7 +86,7 @@ struct FuzzyMatcher {
         var matchedIndices: [Int] = []
         var qi = 0
         for bi in boundaryIndices {
-            if qi < q.count && q[qi] == t[bi] {
+            if qi < q.count, q[qi] == t[bi] {
                 matchedIndices.append(bi)
                 qi += 1
             }
@@ -101,10 +101,10 @@ struct FuzzyMatcher {
 
     private func substringMatch(q: [Character], t: [Character]) -> MatchResult? {
         guard q.count <= t.count else { return nil }
-        for start in 0...(t.count - q.count) {
-            let matches = (0..<q.count).allSatisfy { q[$0] == t[start + $0] }
+        for start in 0 ... (t.count - q.count) {
+            let matches = (0 ..< q.count).allSatisfy { q[$0] == t[start + $0] }
             if matches {
-                let indices = Array(start..<(start + q.count))
+                let indices = Array(start ..< (start + q.count))
                 // Bonus for matching near the start
                 let positionBonus = max(0, 0.1 - Double(start) * 0.01)
                 return MatchResult(score: 0.6 + positionBonus, matchedIndices: indices)
@@ -119,7 +119,7 @@ struct FuzzyMatcher {
         var consecutiveBonus: Double = 0
         var lastMatchIndex = -2
 
-        for ti in 0..<t.count {
+        for ti in 0 ..< t.count {
             guard qi < q.count else { break }
             if q[qi] == t[ti] {
                 matchedIndices.append(ti)
@@ -153,7 +153,7 @@ struct FuzzyMatcher {
             let dist = damerauLevenshtein(q, word)
             if dist <= 1 {
                 return MatchResult(score: 0.45, matchedIndices: [])
-            } else if dist <= 2 && q.count >= 5 {
+            } else if dist <= 2, q.count >= 5 {
                 return MatchResult(score: 0.3, matchedIndices: [])
             }
         }
@@ -173,9 +173,9 @@ struct FuzzyMatcher {
         let prev = chars[index - 1]
         let curr = chars[index]
         // Uppercase after lowercase (camelCase)
-        if prev.isLowercase && curr.isUppercase { return true }
+        if prev.isLowercase, curr.isUppercase { return true }
         // After a separator
-        if !prev.isLetter && curr.isLetter { return true }
+        if !prev.isLetter, curr.isLetter { return true }
         return false
     }
 
@@ -186,19 +186,23 @@ struct FuzzyMatcher {
         guard m > 0, n > 0 else { return max(m, n) }
 
         var dp = Array(repeating: Array(repeating: 0, count: n + 1), count: m + 1)
-        for i in 0...m { dp[i][0] = i }
-        for j in 0...n { dp[0][j] = j }
+        for i in 0 ... m {
+            dp[i][0] = i
+        }
+        for j in 0 ... n {
+            dp[0][j] = j
+        }
 
-        for i in 1...m {
-            for j in 1...n {
+        for i in 1 ... m {
+            for j in 1 ... n {
                 let cost = a[i - 1] == b[j - 1] ? 0 : 1
                 dp[i][j] = min(
-                    dp[i - 1][j] + 1,      // deletion
-                    dp[i][j - 1] + 1,      // insertion
+                    dp[i - 1][j] + 1, // deletion
+                    dp[i][j - 1] + 1, // insertion
                     dp[i - 1][j - 1] + cost // substitution
                 )
                 // Transposition
-                if i > 1 && j > 1 && a[i - 1] == b[j - 2] && a[i - 2] == b[j - 1] {
+                if i > 1, j > 1, a[i - 1] == b[j - 2], a[i - 2] == b[j - 1] {
                     dp[i][j] = min(dp[i][j], dp[i - 2][j - 2] + cost)
                 }
             }

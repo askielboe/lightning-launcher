@@ -1,5 +1,5 @@
-import Foundation
 import AppKit
+import Foundation
 
 /// Scans the filesystem for `.app` bundles and produces `AppEntry` values.
 ///
@@ -123,7 +123,7 @@ struct AppScanner {
         var current = ""
 
         for char in string {
-            if char.isUppercase && !current.isEmpty {
+            if char.isUppercase, !current.isEmpty {
                 tokens.append(current)
                 current = String(char)
             } else {

@@ -19,7 +19,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem?
     private var settingsWindow: NSWindow?
 
-    func applicationDidFinishLaunching(_ notification: Notification) {
+    func applicationDidFinishLaunching(_: Notification) {
         NSApp.setActivationPolicy(.accessory)
 
         // Initialize persistence and load saved data
@@ -70,12 +70,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         )
     }
 
-    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+    func applicationShouldHandleReopen(_: NSApplication, hasVisibleWindows _: Bool) -> Bool {
         panelController.show()
         return true
     }
 
-    @objc private func handleTermination(_ notification: Notification) {
+    @objc private func handleTermination(_: Notification) {
         monitorCoordinator.stop()
         persistenceManager.stopPeriodicFlush()
         persistenceManager.save()
@@ -135,7 +135,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         window.center()
         window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
-        self.settingsWindow = window
+        settingsWindow = window
     }
 
     @objc private func quitApp() {
@@ -148,8 +148,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self else { return }
             let additionalPaths = UserPreferences.shared.additionalSearchPaths.map { URL(fileURLWithPath: $0) }
-            let entries = self.appScanner.scan(additionalPaths: additionalPaths)
-            self.appIndex.update(with: entries)
+            let entries = appScanner.scan(additionalPaths: additionalPaths)
+            appIndex.update(with: entries)
 
             Task {
                 await self.iconCache.preload(entries: entries)
@@ -161,8 +161,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         DispatchQueue.global(qos: .utility).async { [weak self] in
             guard let self else { return }
             let additionalPaths = UserPreferences.shared.additionalSearchPaths.map { URL(fileURLWithPath: $0) }
-            let entries = self.appScanner.scan(additionalPaths: additionalPaths)
-            self.appIndex.update(with: entries)
+            let entries = appScanner.scan(additionalPaths: additionalPaths)
+            appIndex.update(with: entries)
 
             Task {
                 await self.iconCache.preload(entries: entries)

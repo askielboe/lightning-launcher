@@ -1,5 +1,5 @@
-import SwiftUI
 import HotKey
+import SwiftUI
 
 /// A view that records a new global hotkey combination.
 ///
@@ -70,7 +70,7 @@ struct HotKeyRecorderNSView: NSViewRepresentable {
     @Binding var isRecording: Bool
     @Binding var displayString: String
 
-    func makeNSView(context: Context) -> HotKeyRecorderEventView {
+    func makeNSView(context _: Context) -> HotKeyRecorderEventView {
         let view = HotKeyRecorderEventView()
         view.onKeyCombo = { keyCode, modifiers in
             saveHotKey(keyCode: keyCode, modifiers: modifiers)
@@ -78,7 +78,7 @@ struct HotKeyRecorderNSView: NSViewRepresentable {
         return view
     }
 
-    func updateNSView(_ nsView: HotKeyRecorderEventView, context: Context) {
+    func updateNSView(_ nsView: HotKeyRecorderEventView, context _: Context) {
         nsView.isRecordingEnabled = isRecording
         nsView.onKeyCombo = { keyCode, modifiers in
             saveHotKey(keyCode: keyCode, modifiers: modifiers)
@@ -111,8 +111,8 @@ final class HotKeyRecorderEventView: NSView {
         // Use a local event monitor to capture key events
         if monitor == nil {
             monitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
-                guard let self, self.isRecordingEnabled else { return event }
-                self.onKeyCombo?(event.keyCode, event.modifierFlags)
+                guard let self, isRecordingEnabled else { return event }
+                onKeyCombo?(event.keyCode, event.modifierFlags)
                 return nil // Consume the event
             }
         }
