@@ -34,14 +34,18 @@ just bundle
 ## Development
 
 ```bash
-just build      # Debug build
-just release    # Release build
-just test       # Run unit tests
-just clean      # Clean build artifacts
-just bundle     # Create .app bundle
+mise install     # Install dev tools (swiftlint, swiftformat)
+just build       # Debug build
+just release     # Release build
+just test        # Run unit tests
+just lint        # Lint Swift sources
+just format      # Format Swift sources
+just clean       # Clean build artifacts
+just bundle      # Create .app bundle
 ```
 
 ## Requirements
 
 - macOS 13.0+
 - Swift 5.9+
+- [mise](https://mise.jdx.dev) (for dev tools)

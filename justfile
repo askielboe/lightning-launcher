@@ -36,6 +36,14 @@ clean:
 bundle: _build-info
     bash Scripts/bundle.sh
 
+# Lint Swift sources
+lint:
+    swiftlint lint
+
+# Format Swift sources
+format:
+    swiftformat Sources Tests
+
 # Resolve package dependencies
 resolve:
     swift package resolve
