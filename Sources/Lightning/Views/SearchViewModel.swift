@@ -83,6 +83,11 @@ final class SearchViewModel: ObservableObject {
         selectedIndex = min(results.count - 1, selectedIndex + 1)
     }
 
+    /// Dismisses the search panel.
+    func dismiss() {
+        onDismiss?()
+    }
+
     /// Launches the currently selected app.
     func launchSelected() {
         guard !results.isEmpty, selectedIndex < results.count else { return }

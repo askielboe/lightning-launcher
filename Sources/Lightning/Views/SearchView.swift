@@ -35,7 +35,8 @@ struct SearchView: View {
             placeholder: "Search apps...",
             onArrowUp: { viewModel.moveUp() },
             onArrowDown: { viewModel.moveDown() },
-            onReturn: { viewModel.launchSelected() }
+            onReturn: { viewModel.launchSelected() },
+            onEscape: { viewModel.dismiss() }
         )
         .padding(.horizontal, 16)
         .padding(.vertical, 14)
@@ -53,6 +54,7 @@ struct KeyboardTextField: NSViewRepresentable {
     var onArrowUp: () -> Void
     var onArrowDown: () -> Void
     var onReturn: () -> Void
+    var onEscape: () -> Void
 
     func makeNSView(context: Context) -> NSTextField {
         let field = CallbackTextField()
@@ -67,6 +69,7 @@ struct KeyboardTextField: NSViewRepresentable {
         field.onArrowUp = onArrowUp
         field.onArrowDown = onArrowDown
         field.onReturn = onReturn
+        field.onEscape = onEscape
         return field
     }
 
@@ -78,6 +81,7 @@ struct KeyboardTextField: NSViewRepresentable {
             field.onArrowUp = onArrowUp
             field.onArrowDown = onArrowDown
             field.onReturn = onReturn
+            field.onEscape = onEscape
         }
     }
 
@@ -105,9 +109,12 @@ final class CallbackTextField: NSTextField {
     var onArrowUp: (() -> Void)?
     var onArrowDown: (() -> Void)?
     var onReturn: (() -> Void)?
+    var onEscape: (() -> Void)?
 
     override func keyDown(with event: NSEvent) {
         switch event.keyCode {
+        case 53: // Escape
+            onEscape?()
         case 126: // Arrow Up
             onArrowUp?()
         case 125: // Arrow Down

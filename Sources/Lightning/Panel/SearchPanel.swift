@@ -30,10 +30,8 @@ final class SearchPanel: NSPanel {
     override var canBecomeMain: Bool { false }
 
     override func keyDown(with event: NSEvent) {
-        if event.keyCode == 53 { // Escape
-            orderOut(nil)
-        } else {
-            super.keyDown(with: event)
-        }
+        // Escape is handled by the text field → PanelController.hide()
+        // This is a fallback for any other key events that reach the panel
+        super.keyDown(with: event)
     }
 }

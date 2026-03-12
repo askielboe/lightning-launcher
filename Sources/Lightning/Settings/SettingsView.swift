@@ -18,6 +18,8 @@ struct SettingsView: View {
     var body: some View {
         Form {
             Section("General") {
+                HotKeyRecorderView()
+
                 Toggle("Launch at login", isOn: $launchAtLogin)
                     .onChange(of: launchAtLogin) { newValue in
                         UserPreferences.shared.launchAtLogin = newValue
