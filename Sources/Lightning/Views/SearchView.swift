@@ -73,7 +73,10 @@ struct KeyboardTextField: NSViewRepresentable {
     }
 
     func updateNSView(_ nsView: NSTextField, context: Context) {
-        if nsView.stringValue != text {
+        // Compare against the field editor's live text when editing is active
+        // to avoid setting stringValue mid-edit (which selects all text).
+        let currentText = (nsView.currentEditor() as? NSTextView)?.string ?? nsView.stringValue
+        if currentText != text {
             nsView.stringValue = text
         }
         // Keep callbacks up to date

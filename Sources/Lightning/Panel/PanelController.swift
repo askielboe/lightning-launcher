@@ -8,6 +8,7 @@ import SwiftUI
 final class PanelController {
     private let panel: SearchPanel
     private var eventMonitor: Any?
+    private var globalEventMonitor: Any?
     let searchViewModel = SearchViewModel()
 
     /// The panel width.
@@ -102,12 +103,28 @@ final class PanelController {
     }
 
     private func setupClickOutsideMonitor() {
+        // Clicks on other windows within the app
         eventMonitor = NSEvent.addLocalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] event in
             guard let self, self.panel.isVisible else { return event }
             if event.window != self.panel {
                 self.hide()
             }
             return event
+        }
+        // Clicks on windows of other apps
+        globalEventMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
+            guard let self, self.panel.isVisible else { return }
+            self.hide()
+        }
+
+        // Hide when the panel loses key status (e.g. Cmd+Tab, Mission Control)
+        NotificationCenter.default.addObserver(
+            forName: NSWindow.didResignKeyNotification,
+            object: panel,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self, self.panel.isVisible else { return }
+            self.hide()
         }
     }
 
