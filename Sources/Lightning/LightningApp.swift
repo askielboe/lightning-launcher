@@ -116,7 +116,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         panelController.show()
     }
 
-    @objc private func openSettings() {
+    @objc func openSettings() {
         if let settingsWindow, settingsWindow.isVisible {
             settingsWindow.makeKeyAndOrderFront(nil)
             NSApp.activate(ignoringOtherApps: true)

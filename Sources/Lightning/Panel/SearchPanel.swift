@@ -37,7 +37,7 @@ final class SearchPanel: NSPanel {
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
         // Cmd+, opens settings (menu key equivalents don't work for non-activating panels)
         if event.modifierFlags.contains(.command), event.charactersIgnoringModifiers == "," {
-            NSApp.sendAction(Selector(("openSettings")), to: NSApp.delegate, from: nil)
+            NSApp.sendAction(#selector(AppDelegate.openSettings), to: NSApp.delegate, from: nil)
             return true
         }
         return super.performKeyEquivalent(with: event)
