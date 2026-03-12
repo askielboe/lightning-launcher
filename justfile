@@ -36,6 +36,10 @@ clean:
 bundle: _build-info
     bash Scripts/bundle.sh
 
+# Bundle and install to /Applications
+install: bundle
+    cp -r .build/release/Lightning.app /Applications/
+
 # Lint Swift sources
 lint:
     swiftlint lint
