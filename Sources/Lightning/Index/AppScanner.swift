@@ -20,12 +20,18 @@ struct AppScanner {
         return paths
     }
 
+    /// Default search paths minus any the user has removed.
+    static var activeDefaultPaths: [URL] {
+        let removed = Set(UserPreferences.shared.removedDefaultPaths)
+        return defaultSearchPaths.filter { !removed.contains($0.path) }
+    }
+
     /// Scans all configured directories and returns discovered app entries.
     ///
     /// - Parameter additionalPaths: Extra directories to include beyond the defaults.
     /// - Returns: Array of discovered `AppEntry` values.
     func scan(additionalPaths: [URL] = []) -> [AppEntry] {
-        let allPaths = Self.defaultSearchPaths + additionalPaths
+        let allPaths = Self.activeDefaultPaths + additionalPaths
         var entries: [String: AppEntry] = [:]
 
         for directory in allPaths {

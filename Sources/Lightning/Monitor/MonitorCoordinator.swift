@@ -19,7 +19,7 @@ final class MonitorCoordinator {
     /// Starts all monitors.
     func start() {
         // Watch flat application directories with kqueue
-        let flatDirs = AppScanner.defaultSearchPaths
+        let flatDirs = AppScanner.activeDefaultPaths
         directoryMonitor.watch(directories: flatDirs)
         directoryMonitor.onChange = { [weak self] _ in
             self?.debounceRescan()
