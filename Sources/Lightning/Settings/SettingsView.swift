@@ -48,41 +48,33 @@ struct SettingsView: View {
                     }
                 }
 
-                Section("Search Paths") {
+                Section {
                     ForEach(AppScanner.defaultSearchPaths.filter { !removedDefaultPaths.contains($0.path) }, id: \.path) { url in
-                        HStack {
-                            Text(url.path)
-                                .lineLimit(1)
-                                .truncationMode(.middle)
-                                .foregroundColor(.secondary)
-                            Spacer()
-                            Button(role: .destructive) {
-                                removedDefaultPaths.insert(url.path)
-                                UserPreferences.shared.removedDefaultPaths = Array(removedDefaultPaths)
-                            } label: {
-                                Image(systemName: "minus.circle")
-                            }
-                            .buttonStyle(.borderless)
+                        pathRow(url.path, isDefault: true) {
+                            removedDefaultPaths.insert(url.path)
+                            UserPreferences.shared.removedDefaultPaths = Array(removedDefaultPaths)
                         }
                     }
-
                     ForEach(additionalPaths, id: \.self) { path in
-                        HStack {
-                            Text(path)
-                                .lineLimit(1)
-                                .truncationMode(.middle)
-                            Spacer()
-                            Button(role: .destructive) {
-                                additionalPaths.removeAll { $0 == path }
-                                UserPreferences.shared.additionalSearchPaths = additionalPaths
-                            } label: {
-                                Image(systemName: "minus.circle")
-                            }
-                            .buttonStyle(.borderless)
+                        pathRow(path, isDefault: false) {
+                            additionalPaths.removeAll { $0 == path }
+                            UserPreferences.shared.additionalSearchPaths = additionalPaths
                         }
                     }
-
+                } header: {
                     HStack {
+                        Text("Search Paths")
+                        Spacer()
+                        if !removedDefaultPaths.isEmpty {
+                            Button("Restore Defaults") {
+                                removedDefaultPaths.removeAll()
+                                UserPreferences.shared.removedDefaultPaths = []
+                            }
+                            .font(.caption)
+                        }
+                    }
+                } footer: {
+                    HStack(spacing: 12) {
                         Button("Add Path...") {
                             showPathPicker = true
                         }
@@ -96,14 +88,6 @@ struct SettingsView: View {
                                     additionalPaths.append(path)
                                     UserPreferences.shared.additionalSearchPaths = additionalPaths
                                 }
-                            }
-                        }
-
-                        if !removedDefaultPaths.isEmpty {
-                            Spacer()
-                            Button("Restore Defaults") {
-                                removedDefaultPaths.removeAll()
-                                UserPreferences.shared.removedDefaultPaths = []
                             }
                         }
                     }
@@ -125,7 +109,21 @@ struct SettingsView: View {
             .foregroundColor(.secondary)
             .padding(.bottom, 12)
         }
-        .frame(width: 500, height: 520)
+        .frame(width: 520, height: 560)
+    }
+
+    private func pathRow(_ path: String, isDefault: Bool, onDelete: @escaping () -> Void) -> some View {
+        HStack {
+            Text(path)
+                .lineLimit(1)
+                .truncationMode(.middle)
+                .foregroundColor(isDefault ? .secondary : .primary)
+            Spacer()
+            Button(role: .destructive, action: onDelete) {
+                Image(systemName: "minus.circle")
+            }
+            .buttonStyle(.borderless)
+        }
     }
 
     private var appVersion: String {
