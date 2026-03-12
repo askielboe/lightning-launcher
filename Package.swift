@@ -8,7 +8,7 @@ let package = Package(
         .macOS(.v13)
     ],
     dependencies: [
-        .package(url: "https://github.com/soffes/HotKey", from: "0.2.1"),
+        .package(url: "https://github.com/soffes/HotKey", from: "0.2.1")
     ],
     targets: [
         .executableTarget(
@@ -23,7 +23,7 @@ let package = Package(
                     "-Xlinker", "-sectcreate",
                     "-Xlinker", "__TEXT",
                     "-Xlinker", "__info_plist",
-                    "-Xlinker", "Sources/Resources/Info.plist",
+                    "-Xlinker", "Sources/Resources/Info.plist"
                 ])
             ]
         ),
@@ -31,6 +31,6 @@ let package = Package(
             name: "LightningTests",
             dependencies: ["Lightning"],
             path: "Tests/LightningTests"
-        ),
+        )
     ]
 )

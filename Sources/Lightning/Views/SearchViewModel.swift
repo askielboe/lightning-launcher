@@ -129,15 +129,13 @@ final class SearchViewModel: ObservableObject {
         if let iconCache {
             Task {
                 var withIcons = matched
-                for i in withIcons.indices {
-                    if withIcons[i].icon == nil {
-                        let icon = await iconCache.icon(for: withIcons[i])
-                        withIcons[i].icon = icon
-                    }
+                for i in withIcons.indices where withIcons[i].icon == nil {
+                    let icon = await iconCache.icon(for: withIcons[i])
+                    withIcons[i].icon = icon
                 }
-                let final_ = withIcons
+                let completed = withIcons
                 await MainActor.run {
-                    self.results = final_
+                    self.results = completed
                     self.selectedIndex = 0
                     self.updateHeight()
                 }

@@ -60,7 +60,10 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    ForEach(AppScanner.defaultSearchPaths.filter { !removedDefaultPaths.contains($0.path) }, id: \.path) { url in
+                    ForEach(
+                        AppScanner.defaultSearchPaths.filter { !removedDefaultPaths.contains($0.path) },
+                        id: \.path
+                    ) { url in
                         pathRow(url.path, isDefault: true) {
                             removedDefaultPaths.insert(url.path)
                             UserPreferences.shared.removedDefaultPaths = Array(removedDefaultPaths)

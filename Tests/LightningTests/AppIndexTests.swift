@@ -17,7 +17,7 @@ import Testing
         let index = AppIndex()
         let entries = [
             makeAppEntry(id: "com.apple.Safari", name: "Safari"),
-            makeAppEntry(id: "com.apple.Mail", name: "Mail"),
+            makeAppEntry(id: "com.apple.Mail", name: "Mail")
         ]
         index.update(with: entries)
         #expect(index.allEntries.count == 2)
@@ -27,7 +27,7 @@ import Testing
         let index = AppIndex()
         let entries = [
             makeAppEntry(id: "com.apple.Safari", name: "Safari"),
-            makeAppEntry(id: "com.apple.Mail", name: "Mail"),
+            makeAppEntry(id: "com.apple.Mail", name: "Mail")
         ]
         index.update(with: entries)
 
@@ -66,13 +66,13 @@ import Testing
         let index = AppIndex()
         index.update(with: [
             makeAppEntry(id: "com.apple.Safari", name: "Safari"),
-            makeAppEntry(id: "com.apple.Mail", name: "Mail"),
+            makeAppEntry(id: "com.apple.Mail", name: "Mail")
         ])
         #expect(index.allEntries.count == 2)
 
         // Re-scan with only Safari — Mail should be dropped
         index.update(with: [
-            makeAppEntry(id: "com.apple.Safari", name: "Safari"),
+            makeAppEntry(id: "com.apple.Safari", name: "Safari")
         ])
         #expect(index.allEntries.count == 1)
         #expect(index.entry(forBundleId: "com.apple.Mail") == nil)
@@ -105,7 +105,7 @@ import Testing
         // Second update adds another entry — cache must reflect the change
         index.update(with: [
             makeAppEntry(id: "com.apple.Safari", name: "Safari"),
-            makeAppEntry(id: "com.apple.Mail", name: "Mail"),
+            makeAppEntry(id: "com.apple.Mail", name: "Mail")
         ])
         #expect(index.allEntries.count == 2)
     }

@@ -19,12 +19,12 @@ struct HotKeyRecorderView: View {
             Spacer()
             Button(action: {
                 isRecording.toggle()
-            }) {
+            }, label: {
                 Text(isRecording ? "Press a key combo..." : displayString)
                     .frame(minWidth: 100)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
-            }
+            })
             .background(
                 RoundedRectangle(cornerRadius: 6)
                     .stroke(isRecording ? Color.accentColor : Color.secondary.opacity(0.3), lineWidth: 1)

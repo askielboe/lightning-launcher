@@ -11,7 +11,7 @@ struct AppScanner {
         var paths = [
             URL(fileURLWithPath: "/Applications"),
             URL(fileURLWithPath: "/System/Applications"),
-            URL(fileURLWithPath: "/System/Cryptexes/App/System/Applications"),
+            URL(fileURLWithPath: "/System/Cryptexes/App/System/Applications")
         ]
         // ~/Applications
         if let home = FileManager.default.homeDirectoryForCurrentUser as URL? {
@@ -36,11 +36,9 @@ struct AppScanner {
 
         for directory in allPaths {
             let apps = scanDirectory(directory)
-            for app in apps {
+            for app in apps where entries[app.id] == nil {
                 // First discovered path wins (earlier directories have priority)
-                if entries[app.id] == nil {
-                    entries[app.id] = app
-                }
+                entries[app.id] = app
             }
         }
 

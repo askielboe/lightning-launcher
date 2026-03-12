@@ -6,7 +6,9 @@ import Testing
     // MARK: - Fixtures
 
     private let safari = makeAppEntry(id: "com.apple.Safari", name: "Safari", keywords: ["browser", "web"])
-    private let settings = makeAppEntry(id: "com.apple.systempreferences", name: "System Settings", keywords: ["preferences"])
+    private let settings = makeAppEntry(
+        id: "com.apple.systempreferences", name: "System Settings", keywords: ["preferences"]
+    )
     private let slack = makeAppEntry(id: "com.tinyspeck.slackmacgap", name: "Slack", keywords: ["chat", "messaging"])
     private let spotify = makeAppEntry(id: "com.spotify.client", name: "Spotify", keywords: ["music", "player"])
 

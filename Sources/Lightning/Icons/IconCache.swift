@@ -22,10 +22,8 @@ actor IconCache {
 
     /// Preloads icons for all provided entries.
     func preload(entries: [AppEntry]) {
-        for entry in entries {
-            if cache[entry.id] == nil {
-                cache[entry.id] = loadIcon(for: entry)
-            }
+        for entry in entries where cache[entry.id] == nil {
+            cache[entry.id] = loadIcon(for: entry)
         }
     }
 

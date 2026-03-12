@@ -104,7 +104,9 @@ final class PanelController {
 
     private func setupClickOutsideMonitor() {
         // Clicks on other windows within the app
-        eventMonitor = NSEvent.addLocalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] event in
+        eventMonitor = NSEvent.addLocalMonitorForEvents(
+            matching: [.leftMouseDown, .rightMouseDown]
+        ) { [weak self] event in
             guard let self, self.panel.isVisible else { return event }
             if event.window != self.panel {
                 self.hide()
@@ -112,7 +114,9 @@ final class PanelController {
             return event
         }
         // Clicks on windows of other apps
-        globalEventMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
+        globalEventMonitor = NSEvent.addGlobalMonitorForEvents(
+            matching: [.leftMouseDown, .rightMouseDown]
+        ) { [weak self] _ in
             guard let self, self.panel.isVisible else { return }
             self.hide()
         }

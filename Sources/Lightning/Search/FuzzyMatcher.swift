@@ -77,10 +77,8 @@ struct FuzzyMatcher {
     private func wordBoundaryMatch(q: [Character], t: [Character]) -> MatchResult? {
         // Find word boundary positions in target
         var boundaryIndices: [Int] = [0] // First character is always a boundary
-        for i in 1..<t.count {
-            if isWordBoundary(at: i, in: t) {
-                boundaryIndices.append(i)
-            }
+        for i in 1..<t.count where isWordBoundary(at: i, in: t) {
+            boundaryIndices.append(i)
         }
 
         guard q.count <= boundaryIndices.count else { return nil }
@@ -104,13 +102,7 @@ struct FuzzyMatcher {
     private func substringMatch(q: [Character], t: [Character]) -> MatchResult? {
         guard q.count <= t.count else { return nil }
         for start in 0...(t.count - q.count) {
-            var matches = true
-            for j in 0..<q.count {
-                if q[j] != t[start + j] {
-                    matches = false
-                    break
-                }
-            }
+            let matches = (0..<q.count).allSatisfy { q[$0] == t[start + $0] }
             if matches {
                 let indices = Array(start..<(start + q.count))
                 // Bonus for matching near the start

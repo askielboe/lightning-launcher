@@ -23,7 +23,10 @@ final class UserPreferences {
 
     /// Maximum number of search results to display (4-12).
     var maxResults: Int {
-        get { max(4, min(12, defaults.integer(forKey: Keys.maxResults) == 0 ? 8 : defaults.integer(forKey: Keys.maxResults))) }
+        get {
+            let stored = defaults.integer(forKey: Keys.maxResults)
+            return max(4, min(12, stored == 0 ? 8 : stored))
+        }
         set { defaults.set(newValue, forKey: Keys.maxResults) }
     }
 
@@ -47,7 +50,9 @@ final class UserPreferences {
 
     /// Whether to show the menu bar icon.
     var showMenuBarIcon: Bool {
-        get { defaults.object(forKey: Keys.showMenuBarIcon) == nil ? true : defaults.bool(forKey: Keys.showMenuBarIcon) }
+        get {
+            defaults.object(forKey: Keys.showMenuBarIcon) == nil ? true : defaults.bool(forKey: Keys.showMenuBarIcon)
+        }
         set { defaults.set(newValue, forKey: Keys.showMenuBarIcon) }
     }
 

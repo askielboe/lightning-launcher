@@ -38,7 +38,4 @@ final class SearchPanel: NSPanel {
         return super.performKeyEquivalent(with: event)
     }
 
-    override func keyDown(with event: NSEvent) {
-        super.keyDown(with: event)
-    }
 }
