@@ -1,21 +1,21 @@
-import XCTest
+import Testing
 @testable import Lightning
 
-final class AdaptiveLearningTests: XCTestCase {
-    func testNoDataReturnsZeroBoost() {
+@Suite struct AdaptiveLearningTests {
+    @Test func noDataReturnsZeroBoost() {
         let learner = AdaptiveLearning()
         let boost = learner.boost(for: "com.google.Chrome", query: "ch")
-        XCTAssertEqual(boost, 0)
+        #expect(boost == 0)
     }
 
-    func testSingleSelectionGivesBoost() {
+    @Test func singleSelectionGivesBoost() {
         let learner = AdaptiveLearning()
         learner.recordSelection(bundleId: "com.google.Chrome", query: "ch")
         let boost = learner.boost(for: "com.google.Chrome", query: "ch")
-        XCTAssertGreaterThan(boost, 0)
+        #expect(boost > 0)
     }
 
-    func testFrequentSelectionGivesHigherBoost() {
+    @Test func frequentSelectionGivesHigherBoost() {
         let learner = AdaptiveLearning()
         // Select Chrome 9 times for "ch"
         for _ in 0..<9 {
@@ -26,27 +26,27 @@ final class AdaptiveLearningTests: XCTestCase {
 
         let chromeBoost = learner.boost(for: "com.google.Chrome", query: "ch")
         let chessBoost = learner.boost(for: "com.apple.Chess", query: "ch")
-        XCTAssertGreaterThan(chromeBoost, chessBoost)
+        #expect(chromeBoost > chessBoost)
     }
 
-    func testDifferentPrefixesTrackedSeparately() {
+    @Test func differentPrefixesTrackedSeparately() {
         let learner = AdaptiveLearning()
         learner.recordSelection(bundleId: "com.google.Chrome", query: "ch")
         learner.recordSelection(bundleId: "com.apple.Safari", query: "sa")
 
         let chromeForCh = learner.boost(for: "com.google.Chrome", query: "ch")
         let chromeForSa = learner.boost(for: "com.google.Chrome", query: "sa")
-        XCTAssertGreaterThan(chromeForCh, chromeForSa)
+        #expect(chromeForCh > chromeForSa)
     }
 
-    func testShortQueryReturnsZero() {
+    @Test func shortQueryReturnsZero() {
         let learner = AdaptiveLearning()
         learner.recordSelection(bundleId: "com.test.app", query: "a")
         let boost = learner.boost(for: "com.test.app", query: "a")
-        XCTAssertEqual(boost, 0) // Single char query doesn't generate prefixes
+        #expect(boost == 0) // Single char query doesn't generate prefixes
     }
 
-    func testDataPersistence() {
+    @Test func dataPersistence() {
         let learner = AdaptiveLearning()
         learner.recordSelection(bundleId: "com.google.Chrome", query: "ch")
         let data = learner.allData()
@@ -54,6 +54,6 @@ final class AdaptiveLearningTests: XCTestCase {
         let learner2 = AdaptiveLearning()
         learner2.load(data)
         let boost = learner2.boost(for: "com.google.Chrome", query: "ch")
-        XCTAssertGreaterThan(boost, 0)
+        #expect(boost > 0)
     }
 }

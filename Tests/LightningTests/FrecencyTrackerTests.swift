@@ -1,54 +1,54 @@
-import XCTest
+import Testing
 @testable import Lightning
 
-final class FrecencyTrackerTests: XCTestCase {
-    func testInitialMultiplierIsNeutral() {
+@Suite struct FrecencyTrackerTests {
+    @Test func initialMultiplierIsNeutral() {
         let tracker = FrecencyTracker()
         let multiplier = tracker.multiplier(for: "com.test.app")
-        XCTAssertEqual(multiplier, 1.0)
+        #expect(multiplier == 1.0)
     }
 
-    func testSingleLaunchIncreasesMultiplier() {
+    @Test func singleLaunchIncreasesMultiplier() {
         let tracker = FrecencyTracker()
         tracker.recordLaunch(bundleId: "com.test.app")
         let multiplier = tracker.multiplier(for: "com.test.app")
-        XCTAssertGreaterThan(multiplier, 1.0)
+        #expect(multiplier > 1.0)
     }
 
-    func testMultipleLaunchesIncreaseMultiplier() {
+    @Test func multipleLaunchesIncreaseMultiplier() {
         let tracker = FrecencyTracker()
         for _ in 0..<5 {
             tracker.recordLaunch(bundleId: "com.test.app")
         }
         let multiplier = tracker.multiplier(for: "com.test.app")
-        XCTAssertGreaterThan(multiplier, 1.0)
+        #expect(multiplier > 1.0)
     }
 
-    func testMultiplierCapsAt2() {
+    @Test func multiplierCapsAt2() {
         let tracker = FrecencyTracker()
         for _ in 0..<100 {
             tracker.recordLaunch(bundleId: "com.test.app")
         }
         let multiplier = tracker.multiplier(for: "com.test.app")
-        XCTAssertLessThanOrEqual(multiplier, 2.0)
+        #expect(multiplier <= 2.0)
     }
 
-    func testDifferentAppsTrackedSeparately() {
+    @Test func differentAppsTrackedSeparately() {
         let tracker = FrecencyTracker()
         tracker.recordLaunch(bundleId: "com.test.app1")
         let m1 = tracker.multiplier(for: "com.test.app1")
         let m2 = tracker.multiplier(for: "com.test.app2")
-        XCTAssertGreaterThan(m1, m2)
+        #expect(m1 > m2)
     }
 
-    func testRecordsSerialization() {
+    @Test func recordsSerialization() {
         let tracker = FrecencyTracker()
         tracker.recordLaunch(bundleId: "com.test.app")
         let records = tracker.allRecords()
-        XCTAssertNotNil(records["com.test.app"])
+        #expect(records["com.test.app"] != nil)
 
         let tracker2 = FrecencyTracker()
         tracker2.load(records)
-        XCTAssertGreaterThan(tracker2.multiplier(for: "com.test.app"), 1.0)
+        #expect(tracker2.multiplier(for: "com.test.app") > 1.0)
     }
 }

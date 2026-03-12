@@ -1,48 +1,48 @@
-import XCTest
+import Testing
 @testable import Lightning
 
-final class AppScannerTests: XCTestCase {
+@Suite struct AppScannerTests {
     let scanner = AppScanner()
 
-    func testTokenizeSimpleName() {
+    @Test func tokenizeSimpleName() {
         let tokens = scanner.tokenize("Safari")
-        XCTAssertTrue(tokens.contains("safari"))
+        #expect(tokens.contains("safari"))
     }
 
-    func testTokenizeMultiWord() {
+    @Test func tokenizeMultiWord() {
         let tokens = scanner.tokenize("Visual Studio Code")
-        XCTAssertTrue(tokens.contains("visual"))
-        XCTAssertTrue(tokens.contains("studio"))
-        XCTAssertTrue(tokens.contains("code"))
+        #expect(tokens.contains("visual"))
+        #expect(tokens.contains("studio"))
+        #expect(tokens.contains("code"))
     }
 
-    func testTokenizeCamelCase() {
+    @Test func tokenizeCamelCase() {
         let tokens = scanner.tokenize("WebStorm")
-        XCTAssertTrue(tokens.contains("web"))
-        XCTAssertTrue(tokens.contains("storm"))
+        #expect(tokens.contains("web"))
+        #expect(tokens.contains("storm"))
     }
 
-    func testTokenizeWithHyphen() {
+    @Test func tokenizeWithHyphen() {
         let tokens = scanner.tokenize("Hex-Editor")
-        XCTAssertTrue(tokens.contains("hex"))
-        XCTAssertTrue(tokens.contains("editor"))
+        #expect(tokens.contains("hex"))
+        #expect(tokens.contains("editor"))
     }
 
-    func testTokenizeWithDot() {
+    @Test func tokenizeWithDot() {
         let tokens = scanner.tokenize("com.app.name")
-        XCTAssertTrue(tokens.contains("com"))
-        XCTAssertTrue(tokens.contains("app"))
-        XCTAssertTrue(tokens.contains("name"))
+        #expect(tokens.contains("com"))
+        #expect(tokens.contains("app"))
+        #expect(tokens.contains("name"))
     }
 
-    func testTokenizeIncludesFullName() {
+    @Test func tokenizeIncludesFullName() {
         let tokens = scanner.tokenize("Visual Studio Code")
-        XCTAssertEqual(tokens.first, "visual studio code")
+        #expect(tokens.first == "visual studio code")
     }
 
-    func testScanFindsSystemApps() {
+    @Test func scanFindsSystemApps() {
         // Integration test: should find at least some apps
         let entries = scanner.scan()
-        XCTAssertGreaterThan(entries.count, 0)
+        #expect(entries.count > 0)
     }
 }
