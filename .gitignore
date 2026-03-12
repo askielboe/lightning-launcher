@@ -1,5 +1,6 @@
 .build/
 .swiftpm/
+Sources/Lightning/BuildInfo.swift
 *.xcodeproj/
 xcuserdata/
 DerivedData/
