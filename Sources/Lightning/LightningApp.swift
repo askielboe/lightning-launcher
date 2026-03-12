@@ -130,7 +130,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             backing: .buffered,
             defer: false
         )
-        window.title = "Lightning Settings"
+        window.title = "Lightning Launcher Settings"
         window.contentView = NSHostingView(rootView: settingsView)
         window.center()
         window.makeKeyAndOrderFront(nil)

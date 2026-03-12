@@ -111,7 +111,7 @@ struct SettingsView: View {
             HStack(spacing: 6) {
                 Image(systemName: "bolt.fill")
                     .font(.system(size: 11))
-                Text("Lightning \(appVersion)")
+                Text("Lightning Launcher \(appVersion)")
                     .font(.system(size: 11))
                 Text(BuildInfo.gitCommit)
                     .font(.system(size: 11, design: .monospaced))

@@ -1,4 +1,4 @@
-# ⚡️ Lightning
+# ⚡️ Lightning Launcher
 
 A fast macOS application launcher.
 
@@ -9,7 +9,7 @@ A fast macOS application launcher.
 - **Instant search** — Fuzzy matching with typo tolerance across all installed apps
 - **Smart ranking** — Frecency tracking with adaptive per-query learning
 - **Real-time monitoring** — Detects newly installed/removed apps within seconds
-- **Lightweight** — No Dock icon, lives in the menu bar
+- **Configurable** — Custom search paths
 
 ## Quick Start
 
