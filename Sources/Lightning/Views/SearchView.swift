@@ -44,10 +44,13 @@ struct SearchView: View {
     }
 }
 
-/// A custom NSTextField wrapper that intercepts arrow keys and Return.
+/// A custom NSTextField wrapper that intercepts arrow keys, Return, and Escape.
 ///
-/// SwiftUI's `TextField` doesn't expose keyboard events, so we use
-/// an `NSViewRepresentable` to capture navigation keys.
+/// Key events are intercepted via the `NSTextFieldDelegate` method
+/// `control(_:textView:doCommandBy:)`, which catches commands from the
+/// field editor (the NSTextView that handles editing inside NSTextField).
+/// This is necessary because the field editor becomes first responder
+/// during editing, so `keyDown` on the NSTextField itself never fires.
 struct KeyboardTextField: NSViewRepresentable {
     @Binding var text: String
     var placeholder: String
@@ -57,7 +60,7 @@ struct KeyboardTextField: NSViewRepresentable {
     var onEscape: () -> Void
 
     func makeNSView(context: Context) -> NSTextField {
-        let field = CallbackTextField()
+        let field = NSTextField()
         field.delegate = context.coordinator
         field.placeholderString = placeholder
         field.font = .systemFont(ofSize: 22, weight: .light)
@@ -66,10 +69,6 @@ struct KeyboardTextField: NSViewRepresentable {
         field.focusRingType = .none
         field.cell?.isScrollable = true
         field.cell?.wraps = false
-        field.onArrowUp = onArrowUp
-        field.onArrowDown = onArrowDown
-        field.onReturn = onReturn
-        field.onEscape = onEscape
         return field
     }
 
@@ -77,12 +76,8 @@ struct KeyboardTextField: NSViewRepresentable {
         if nsView.stringValue != text {
             nsView.stringValue = text
         }
-        if let field = nsView as? CallbackTextField {
-            field.onArrowUp = onArrowUp
-            field.onArrowDown = onArrowDown
-            field.onReturn = onReturn
-            field.onEscape = onEscape
-        }
+        // Keep callbacks up to date
+        context.coordinator.parent = self
     }
 
     func makeCoordinator() -> Coordinator {
@@ -101,39 +96,30 @@ struct KeyboardTextField: NSViewRepresentable {
                 parent.text = field.stringValue
             }
         }
-    }
-}
 
-/// NSTextField subclass that intercepts arrow and Return key events.
-final class CallbackTextField: NSTextField {
-    var onArrowUp: (() -> Void)?
-    var onArrowDown: (() -> Void)?
-    var onReturn: (() -> Void)?
-    var onEscape: (() -> Void)?
-
-    override func keyDown(with event: NSEvent) {
-        switch event.keyCode {
-        case 53: // Escape
-            onEscape?()
-        case 126: // Arrow Up
-            onArrowUp?()
-        case 125: // Arrow Down
-            onArrowDown?()
-        case 36: // Return
-            onReturn?()
-        default:
-            super.keyDown(with: event)
+        /// Intercepts commands from the field editor before they are executed.
+        ///
+        /// This is the correct place to handle Escape, arrow keys, and Return
+        /// for an NSTextField, since the field editor (NSTextView) is the actual
+        /// first responder during editing.
+        func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
+            switch commandSelector {
+            case #selector(NSResponder.cancelOperation(_:)):
+                // Escape
+                parent.onEscape()
+                return true
+            case #selector(NSResponder.moveUp(_:)):
+                parent.onArrowUp()
+                return true
+            case #selector(NSResponder.moveDown(_:)):
+                parent.onArrowDown()
+                return true
+            case #selector(NSResponder.insertNewline(_:)):
+                parent.onReturn()
+                return true
+            default:
+                return false
+            }
         }
-    }
-
-    override var acceptsFirstResponder: Bool { true }
-
-    override func becomeFirstResponder() -> Bool {
-        let result = super.becomeFirstResponder()
-        // Ensure the cursor is at the end
-        if let editor = currentEditor() {
-            editor.selectedRange = NSRange(location: stringValue.count, length: 0)
-        }
-        return result
     }
 }
