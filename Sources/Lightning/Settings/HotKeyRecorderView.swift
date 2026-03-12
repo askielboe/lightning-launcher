@@ -21,7 +21,7 @@ struct HotKeyRecorderView: View {
                 isRecording.toggle()
             }) {
                 Text(isRecording ? "Press a key combo..." : displayString)
-                    .frame(minWidth: 140)
+                    .frame(minWidth: 100)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
             }
