@@ -2,7 +2,7 @@
 
 A fast macOS application launcher.
 
-![Search](screenshots/search.png)
+<img width="726" height="459" alt="image" src="https://github.com/user-attachments/assets/e0098a45-103b-4f6c-97db-ffe4d3d59ac0" />
 
 ## Features
 
@@ -10,12 +10,6 @@ A fast macOS application launcher.
 - **Smart ranking** — Frecency tracking with adaptive per-query learning
 - **Real-time monitoring** — Detects newly installed/removed apps within seconds
 - **Lightweight** — No Dock icon, lives in the menu bar
-
-## Screenshots
-
-| Search | Settings |
-|--------|----------|
-| ![Search](screenshots/search.png) | ![Settings](screenshots/settings.png) |
 
 ## Quick Start
 
