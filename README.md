@@ -1,4 +1,4 @@
-# Lightning
+# ⚡️ Lightning
 
 A fast macOS application launcher.
 
