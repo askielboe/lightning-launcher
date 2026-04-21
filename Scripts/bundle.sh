@@ -22,8 +22,10 @@ cp "Sources/Resources/Info.plist" "$BUNDLE_DIR/Contents/Info.plist"
 # Create PkgInfo
 echo -n "APPL????" > "$BUNDLE_DIR/Contents/PkgInfo"
 
+# Copy app icon
+cp "Sources/Resources/AppIcon.icns" "$BUNDLE_DIR/Contents/Resources/AppIcon.icns"
+
 # Ad-hoc codesign
 codesign --force --sign - "$BUNDLE_DIR"
 
 echo "Bundle created at: $BUNDLE_DIR"
-echo "To install: cp -r $BUNDLE_DIR /Applications/"
