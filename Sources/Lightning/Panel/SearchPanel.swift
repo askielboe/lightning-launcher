@@ -40,6 +40,11 @@ final class SearchPanel: NSPanel {
             NSApp.sendAction(#selector(AppDelegate.openSettings), to: NSApp.delegate, from: nil)
             return true
         }
+        // Cmd+Q quits the app
+        if event.modifierFlags.contains(.command), event.charactersIgnoringModifiers == "q" {
+            NSApp.terminate(nil)
+            return true
+        }
         return super.performKeyEquivalent(with: event)
     }
 }
