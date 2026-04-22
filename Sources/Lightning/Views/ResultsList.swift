@@ -3,18 +3,18 @@ import SwiftUI
 /// Displays the list of search results with keyboard navigation.
 ///
 /// Shows up to 8 results. Arrow keys move selection, Return launches
-/// the selected app.
+/// the selected app or copies a calculation result.
 struct ResultsList: View {
-    let results: [AppEntry]
+    let results: [SearchResult]
     let selectedIndex: Int
-    let onSelect: (AppEntry) -> Void
+    let onSelect: (Int) -> Void
 
     var body: some View {
         VStack(spacing: 0) {
-            ForEach(Array(results.enumerated()), id: \.element.id) { index, entry in
-                ResultRow(entry: entry, isSelected: index == selectedIndex)
+            ForEach(Array(results.enumerated()), id: \.element.id) { index, result in
+                ResultRow(result: result, isSelected: index == selectedIndex)
                     .onTapGesture {
-                        onSelect(entry)
+                        onSelect(index)
                     }
             }
         }

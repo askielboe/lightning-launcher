@@ -8,7 +8,7 @@ import Foundation
 /// Bridges user input to the search engine and back to the UI.
 final class SearchViewModel: ObservableObject {
     @Published var query: String = ""
-    @Published var results: [AppEntry] = []
+    @Published var results: [SearchResult] = []
     @Published var selectedIndex: Int = 0
 
     private var searchEngine = SearchEngine()
@@ -87,19 +87,27 @@ final class SearchViewModel: ObservableObject {
         onDismiss?()
     }
 
-    /// Launches the currently selected app.
+    /// Activates the currently selected result (launch app or copy calculation).
     func launchSelected() {
         guard !results.isEmpty, selectedIndex < results.count else { return }
-        let entry = results[selectedIndex]
-        recordSelection(entry)
-        AppLauncher.launch(entry)
-        onDismiss?()
+        activateResult(results[selectedIndex])
     }
 
-    /// Launches a specific app entry (from click).
-    func launch(_ entry: AppEntry) {
-        recordSelection(entry)
-        AppLauncher.launch(entry)
+    /// Activates a result by index (from click).
+    func activateResult(at index: Int) {
+        guard index < results.count else { return }
+        activateResult(results[index])
+    }
+
+    private func activateResult(_ result: SearchResult) {
+        switch result {
+        case let .app(entry):
+            recordSelection(entry)
+            AppLauncher.launch(entry)
+        case let .calculation(value):
+            NSPasteboard.general.clearContents()
+            NSPasteboard.general.setString(value, forType: .string)
+        }
         onDismiss?()
     }
 
@@ -123,6 +131,10 @@ final class SearchViewModel: ObservableObject {
             return
         }
 
+        // Check for arithmetic expression (O(query.count), runs once per keystroke)
+        let calcResult: SearchResult? = ArithmeticEvaluator.evaluate(query)
+            .map { .calculation(result: $0) }
+
         let matched = searchEngine.search(query: query, in: appIndex.allEntries)
 
         // Load icons for results
@@ -133,15 +145,18 @@ final class SearchViewModel: ObservableObject {
                     let icon = await iconCache.icon(for: withIcons[i])
                     withIcons[i].icon = icon
                 }
-                let completed = withIcons
+                let appResults = withIcons.map { SearchResult.app($0) }
+                let finalResults = calcResult.map { [$0] + appResults } ?? appResults
                 await MainActor.run {
-                    self.results = completed
+                    self.results = finalResults
                     self.selectedIndex = 0
                     self.updateHeight()
                 }
             }
         } else {
-            results = matched
+            var combined = matched.map { SearchResult.app($0) }
+            if let calc = calcResult { combined.insert(calc, at: 0) }
+            results = combined
             selectedIndex = 0
             updateHeight()
         }

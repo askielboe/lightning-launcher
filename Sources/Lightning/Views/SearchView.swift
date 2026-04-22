@@ -18,8 +18,8 @@ struct SearchView: View {
                 ResultsList(
                     results: viewModel.results,
                     selectedIndex: viewModel.selectedIndex,
-                    onSelect: { entry in
-                        viewModel.launch(entry)
+                    onSelect: { index in
+                        viewModel.activateResult(at: index)
                     }
                 )
                 .padding(.vertical, 4)
