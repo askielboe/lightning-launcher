@@ -19,7 +19,7 @@ struct ResultRow: View {
                     .resizable()
                     .frame(width: 32, height: 32)
                     .foregroundColor(.secondary)
-                Text("= \(value)")
+                Text(value)
                     .font(.system(size: 16, weight: .medium, design: .monospaced))
                     .lineLimit(1)
             }
