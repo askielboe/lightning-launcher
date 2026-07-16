@@ -45,19 +45,15 @@ final class SearchPanel: NSPanel {
             NSApp.terminate(nil)
             return true
         }
-        // Standard editing commands — menu key equivalents don't fire for non-activating panels,
-        // so forward them to the field editor directly (not via NSApp.sendAction, which can
-        // cause transient key-status changes that dismiss the panel).
+        // Standard editing commands — menu key equivalents don't fire for non-activating panels.
+        // Forward the event to the field editor via keyDown so it flows through the normal
+        // interpretKeyEvents → key bindings → doCommandBySelector → delegate chain.
         if event.modifierFlags.contains(.command), let chars = event.charactersIgnoringModifiers,
+           ["v", "c", "x", "a"].contains(chars),
            let fieldEditor = firstResponder as? NSTextView
         {
-            switch chars {
-            case "v": fieldEditor.paste(nil); return true
-            case "c": fieldEditor.copy(nil); return true
-            case "x": fieldEditor.cut(nil); return true
-            case "a": fieldEditor.selectAll(nil); return true
-            default: break
-            }
+            fieldEditor.keyDown(with: event)
+            return true
         }
         return super.performKeyEquivalent(with: event)
     }
