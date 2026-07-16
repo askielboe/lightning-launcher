@@ -93,17 +93,28 @@ final class SearchViewModel: ObservableObject {
         activateResult(results[selectedIndex])
     }
 
+    /// Activates the currently selected result, opening apps in a new window in
+    /// the current Space (Cmd+Return). Non-app results behave as normal.
+    func launchSelectedInNewWindow() {
+        guard !results.isEmpty, selectedIndex < results.count else { return }
+        activateResult(results[selectedIndex], newWindow: true)
+    }
+
     /// Activates a result by index (from click).
     func activateResult(at index: Int) {
         guard index < results.count else { return }
         activateResult(results[index])
     }
 
-    private func activateResult(_ result: SearchResult) {
+    private func activateResult(_ result: SearchResult, newWindow: Bool = false) {
         switch result {
         case let .app(entry):
             recordSelection(entry)
-            AppLauncher.launch(entry)
+            if newWindow {
+                AppLauncher.launchNewWindow(entry)
+            } else {
+                AppLauncher.launch(entry)
+            }
         case let .calculation(value):
             NSPasteboard.general.clearContents()
             NSPasteboard.general.setString(value, forType: .string)

@@ -31,6 +31,9 @@ final class PanelController {
         searchViewModel.onDismiss = { [weak self] in
             self?.hide()
         }
+        panel.onCommandReturn = { [weak self] in
+            self?.searchViewModel.launchSelectedInNewWindow()
+        }
 
         setupClickOutsideMonitor()
     }

@@ -28,8 +28,20 @@ just bundle
 | Toggle search panel | Option+Space (configurable) |
 | Navigate results | Arrow Up / Arrow Down |
 | Launch selected app | Return |
+| Launch in a new window (current Space) | Cmd+Return |
 | Dismiss panel | Escape |
 | Open settings | Cmd+, |
+
+### Launch in a new window (Cmd+Return)
+
+Plain **Return** activates the app, bringing an existing window forward — which,
+under focus-following window managers like [AeroSpace](https://github.com/nikitabobko/AeroSpace),
+switches you to whatever workspace that window lives in.
+
+**Cmd+Return** instead opens a *new* window of the app in your **current** Space.
+The first time you do this for a given app, macOS asks permission for Lightning to
+control it (Automation) — approve it once and it works from then on. Apps that
+don't support scripted new windows fall back to opening a fresh instance.
 
 ## Development
 

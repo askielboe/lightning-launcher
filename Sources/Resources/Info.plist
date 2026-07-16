@@ -22,6 +22,8 @@
     <true/>
     <key>NSHighResolutionCapable</key>
     <true/>
+    <key>NSAppleEventsUsageDescription</key>
+    <string>Lightning uses automation to open a new window of the selected app in your current Space (Cmd+Return).</string>
     <key>CFBundleIconFile</key>
     <string>AppIcon</string>
 </dict>

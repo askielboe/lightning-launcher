@@ -5,6 +5,10 @@ import AppKit
 /// This panel stays above other windows, becomes key (for keyboard input)
 /// but never becomes main, and dismisses on Escape.
 final class SearchPanel: NSPanel {
+    /// Called when Cmd+Return is pressed — request opening the selected result
+    /// in a new window in the current Space.
+    var onCommandReturn: (() -> Void)?
+
     init(contentRect: NSRect) {
         super.init(
             contentRect: contentRect,
@@ -43,6 +47,14 @@ final class SearchPanel: NSPanel {
         // Cmd+Q quits the app
         if event.modifierFlags.contains(.command), event.charactersIgnoringModifiers == "q" {
             NSApp.terminate(nil)
+            return true
+        }
+        // Cmd+Return opens the selected result in a new window in the current Space
+        // (rather than activating an existing window, which follows focus to another
+        // Space/AeroSpace workspace). keyCode 36 = Return, 76 = keypad Enter.
+        // Consuming the event here keeps it from also firing as a newline.
+        if event.modifierFlags.contains(.command), event.keyCode == 36 || event.keyCode == 76 {
+            onCommandReturn?()
             return true
         }
         // Standard editing commands — menu key equivalents don't fire for non-activating panels.
